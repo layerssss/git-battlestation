@@ -1,0 +1,16 @@
+extends layout
+block body
+  style
+    input,button{
+      margin-left: 4px !important;
+    }
+  .well
+    ul.unstyled
+      for host, alias in peers
+        li 
+          a(href='http://#{host}/') #{alias}: #{host}
+          a.btn.btn-mini(href='#{alias}?_method=delete') rm
+  form(method='post').form-inline
+    input(type='text',name='peer[alias]',placeholder='alias..')
+    input(type='text',name='peer[host]',placeholder='host..')
+    button.btn-primary.btn(type='submit') add

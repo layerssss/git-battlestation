@@ -1,0 +1,10 @@
+extends project
+block peer
+  .btn-group
+    a.btn.dropdown-toggle(data-toggle='dropdown', href='#')
+      =peer
+      span.caret
+    ul.dropdown-menu
+      for host, alias in peers
+        li(class=alias==peer?'active':'')
+          a(href='/#{project}/#{branch}/#{alias}/master/')=alias

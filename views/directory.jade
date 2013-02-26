@@ -1,0 +1,40 @@
+extends layout
+block body
+  .row-fluid
+    .span4
+      ul.nav.nav-tabs.nav-stacked
+        for item in items.filter(function(i){return i.type=='directory'})
+          li.clearfix(style='position:relative;white-space:nowrap;overflow:hidden;')
+            a(href=encodeURIComponent(item.basename),title=item.name)
+              !=item.icon
+              =item.basename
+        for item in items.filter(function(i){return i.type!='directory'})
+          li.clearfix(style='position:relative;white-space:nowrap;overflow:hidden;')
+            .pull-right
+              a.btn.btn-source.btn-mini(href=encodeURIComponent(item.basename)) source
+            a(href=encodeURIComponent(item.basename),title=item.name)
+              !=item.icon
+              =item.basename
+    script(src='/fs/sexy_assets/marked.js')
+    :coffeescript
+      $ = require 'layerssss-todc-bootstrap'
+      source = (filename)->
+        $('.source').hide()
+        $('.filename').text "loading #{filename} .."
+        $.ajax filename,
+          dataType: 'text'
+          success: (data)->
+            $('.filename').text filename
+            $('.source').show()
+            if filename.match /\.md$/
+              $('.source').html marked data
+            else
+              $('.source').text data
+      $('.btn-source').click (e)->
+        e.preventDefault()
+        source $(this).attr('href')
+      source('README.md')
+      
+    .span8
+      pre.filename.hide
+      pre.source.hide

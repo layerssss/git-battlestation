@@ -1,0 +1,3 @@
+[submodule "gitweb-theme"]
+	path = gitweb-theme
+	url = git://github.com/kogakure/gitweb-theme.git
