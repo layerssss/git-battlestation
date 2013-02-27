@@ -1,6 +1,17 @@
 extends layout
 block body
-  mixin commits(unmerged)
+  :coffeescript
+    $ ->
+      clip = require 'component-clipboard-dom'
+      clip.swf '/component-clipboard-dom/ZeroClipboard.swf'
+      ($ '.btn-copy').each (i, e)->
+        c = new clip e, e.parentNode
+        c.on 'load', ->
+          console.log 'loaded'
+        c.on 'mousedown', ->
+          console.log 'haha'
+          c.text 'haha'
+  mixin commits(unmerged, prefix)
     table.shortlog
       //- tr
       //-   th 
@@ -10,15 +21,17 @@ block body
           - author = String(commit.author).match(/^\s*(.+)\s*<(.+)>\s*$/);
           td
             if author
-              a.list(href='/#{project}/.git/search?s=#{encodeURIComponent(String(author[2]))};st=author')
+              a.list(href=prefix+'/#{project}/.git/search?s=#{encodeURIComponent(String(author[2]))};st=author')
                 img.avatar(src=gravatar.url(String(author[2]),{s:16}),style='width:16px;height:16px;')
                 =author[1]
             else
               =commit.author
           td
-            a(href='/#{project}/.git/commitdiff/#{commit.hash}')=commit.message
+            a(href=prefix+'/#{project}/.git/commitdiff/#{commit.hash}')=commit.message
           td
-            a(href='/#{project}/.git/commitdiff/#{commit.hash}')=commit.hash.substring(0, 10)
+            div(style='position:relative')
+              =commit.hash.substring(0, 10)
+              a.btn.btn-mini(href=prefix+'/#{project}/.git/commitdiff/#{commit.hash}') [diff]
 
   .row-fluid
     - var comparing = 'undefined'!=typeof(peer)?peer:null
@@ -48,11 +61,11 @@ block body
         .tab-content
           #l-unmerged.tab-pane.active
             if comparing
-              mixin commits(unmerged)
+              mixin commits(unmerged, '')
             else
               .alert.alert-info select a peer to show unmerged commits..
           #l-all.tab-pane 
-            mixin commits(commits)
+            mixin commits(commits, '')
     .span6
       .well(style='background-color: #fff;')
         .btn-toolbar.pull-right
@@ -86,9 +99,9 @@ block body
         .tab-content
           #p-unmerged.tab-pane.active
             if comparing
-              mixin commits(peerData.unmerged)
+              mixin commits(peerData.unmerged, 'http://'+peerHost+':'+settings.port+'/')
             else
               .alert.alert-info select a peer to show unmerged commits..
           if comparing 
             #p-all.tab-pane
-              mixin commits(peerData.commits)
+              mixin commits(peerData.commits, 'http://'+peerHost+':'+settings.port+'/')
