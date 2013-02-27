@@ -149,8 +149,7 @@ app.use gitweb('/', opt)
 server = http.createServer(app)
 server.listen (app.get 'port'), ->
   console.log "battle station fully charged on port #{server.address().port}"
-  git = childProcess.spawn 'git', ['daemon', "--base-path=#{projectroot}", '--export-all'],
-    stdio: 'inherit'
+  git = childProcess.spawn 'git', ['daemon', "--base-path=#{projectroot}", '--export-all']
   git.on 'exit', (code)->
     throw new Error "git exited with #{code}"
   process.on 'uncaughtException', ->
