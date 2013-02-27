@@ -2,13 +2,12 @@ COMPONENT = node_modules/component/bin/component
 
 .PHONY: clean test
 
-all: build build/repos/gitweb.js build/repos/gitweb.css
+all: build build/gitweb.js build/gitweb.css
 
 build: components
 	$(COMPONENT) build
 
-build/repos/gitweb.%: gitweb-theme/gitweb.% build/build.% public/gitweb.%
-	mkdir -p build/repos
+build/gitweb.%: gitweb-theme/gitweb.% build/build.% public/gitweb.%
 	cat $^ > $@
 
 components: component.json

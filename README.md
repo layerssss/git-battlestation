@@ -1,22 +1,23 @@
 git-battlestation
 =================
 
+##安装方法：
+
+* 安装[node.js](http://nodejs.org/)
+* 通过npm安装git-battlestation：`sudo npm install git-battlestation -g`
+* 关闭占用`tcp 19837` 端口的服务器等
+* 关闭本地的`git-daemon`服务（如果有的话）
+
+##启动方法：
+
+* 临时启动：`git-battlestation`
+
 ##功能：
 
-### 包含gitweb中的基本功能
+### √包含gitweb中的基本功能
 
-### 全局管理remote,快速从指定的remote,分支pull
+### √启动git-daemon
 
-* 简化merge信息
-
-### 启动git-daemon
-
-### 查看本地和某一个remote上的分支进展
+### √查看本地和某一个remote上的分支进展
 
 列出所有其他分支上有的而主分支没有的提交。（链接到gitweb上对应的commitdiff）
-
-### 快速查找、生成命令
-
-* 撤销本地的某个提交： git reset HEAD~N --soft
-* 单独截取某一个提交： git cherry-pick BRANCH COMMIT ...
-

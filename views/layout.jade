@@ -4,10 +4,9 @@ html
     block head
       link(href='/build.css',rel='stylesheet')
       script(src='/build.js')
-      link(href='/fs/sexy_assets/icomoon.css',rel='stylesheet')
-      link(href='/repos/gitweb.css',rel='stylesheet')
+      link(href='/gitweb.css',rel='stylesheet')
       :coffeescript
-        $ = require 'layerssss-todc-bootstrap'
+        window.$ = require 'layerssss-todc-bootstrap'
       style
         [class^="icon-"], [class*=" icon-"]
         {
@@ -21,9 +20,7 @@ html
           a.brand(href='/') git-battlestation
           ul.nav
             li
-              a(href='/fs/') filesystem
-            li
-              a(href='/repos/') repositories
+              a(href='/') repositories
             li
               a(href='/peers/') peers
     div.visible-desktop(style='height:40px')

@@ -8,12 +8,15 @@ request = require 'request'
 expressSexyStatic = require 'express-sexy-static'
 moment = require 'moment'
 gravatar = require 'gravatar'
+marked = require 'marked'
 
 gitstat = require './gitstat.iced'
 
 app = new express()
 projectroot = path.resolve '.'
 app.set 'view engine', 'jade'
+
+BATTLEPORT = 19837
 
 app.locals.moment = moment
 app.locals.gravatar = gravatar
@@ -22,15 +25,17 @@ app.set 'views', path.join __dirname, 'views'
 await childProcess.exec 'hostname', defer e, out, err
 console.error "unable to read hostname: #{e.message}" if e
 app.set 'hostname', out
+app.set 'port', BATTLEPORT
   
 
+app.locals.peers = {}
+try
+  app.locals.peers = JSON.parse fs.readFileSync '.git-battlestation-peers.json', 'utf8'
+catch e
 
 app.use express.static path.join __dirname, 'build'
-app.use express.static path.join __dirname, 'public'
 
-app.use '/repos', express.static path.join __dirname, 'gitweb-theme'
-app.use '/fs', expressSexyStatic projectroot,
-  theme: 'directory'
+app.use express.static path.join __dirname, 'gitweb-theme'
 
 app.use express.bodyParser()
 app.use (req, res, next)->
@@ -49,27 +54,32 @@ app.use (req, res, next)->
       res.json obj
   next()
 
-app.get '/', (req, res)->
-  res.render 'welcome'
-app.locals.peers = {}
-try
-  app.locals.peers = JSON.parse fs.readFileSync '.git-battlestation-peers.json', 'utf8'
-catch e
-
 app.get '/who', (req, res)->
   res.send 'git-battlestation'
 
 app.get '/peers/', (req, res)->
   res.render 'peers'
 
+app.get '/peers/arp/', (req, res)->
+  await childProcess.exec 'ping -i 5 -c 2 255.255.255.255', defer e, out, err
+  await childProcess.exec 'arp -a', defer e, out, err
+  res.send out.replace /\n/, '<br/>'
+
 app.post '/peers/', (req, res, next)->
-  await request "http://#{req.body.peer.host}/who", defer err, r, data
-  console.log "http://#{req.body.peer.host}/who"
+  ip = req.header('x-forwarded-for') || req.connection.remoteAddress
+  ip = ip.split(',')[0].trim()
+  return next new Error 'you must operate from 127.0.0.1' if ip!='127.0.0.1'
+
+  await request "http://#{req.body.peer.host}:#{BATTLEPORT}/who", defer err, r, data
   return next new Error "git-battlestation not detected at #{req.body.peer.host}" if err || data!='git-battlestation'
   app.locals.peers[req.body.peer.alias] = req.body.peer.host
   res.redirect 'back'
 
 app.delete '/peers/:peer', (req, res)->
+  ip = req.header('x-forwarded-for') || req.connection.remoteAddress
+  ip = ip.split(',')[0].trim()
+  return next new Error 'you must operate from 127.0.0.1' if ip!='127.0.0.1'
+
   delete app.locals.peers[req.params.peer]
   res.redirect 'back'
 
@@ -88,14 +98,14 @@ app.param 'branch', (req, res, next, branch)->
   res.locals.commits = commits
   next()
 
-app.get '/compare/:project/:branch/', (req, res)->
+app.get '/projects/:project/:branch/', (req, res)->
   res.render 'compare'
 
-app.get '/compare/:project/:branch/:peer/:peerBranch', (req, res, next)->
+app.get '/projects/:project/:branch/:peer/:peerBranch', (req, res, next)->
   res.locals.peer = req.params.peer
   res.locals.peerHost = app.locals.peers[req.params.peer]
   res.locals.peerBranch = req.params.peerBranch
-  await request "http://#{res.locals.peerHost}/compare/#{res.locals.project}/#{req.params.peerBranch}/?format=json", defer e, r, data
+  await request "http://#{res.locals.peerHost}:#{BATTLEPORT}/projects/#{res.locals.project}/#{req.params.peerBranch}/?format=json", defer e, r, data
   return next e if e 
   res.locals.peerData = JSON.parse data
 
@@ -123,15 +133,22 @@ app.get '/compare/:project/:branch/:peer/:peerBranch', (req, res, next)->
     res.locals.peerData.unmerged = res.locals.peerData.unmerged.filter (c)->since < Date.parse c.date
   res.render 'compare'
 
+app.post '/projects/:project/updateRemotes/', (req, res, next)->
+  for alias, host of app.locals.peers
+    await res.locals.repo.exec "remote rm #{alias}", defer e, out, err
+    await res.locals.repo.exec "remote add #{alias} git://#{host}/#{res.locals.project}", defer e, out, err
+    return next e if e
+  res.redirect 'back'
+
 opt = 
   sitename: 'git-battlestation'
   projectroot: projectroot
   'max_depth': 2
-app.use gitweb('/repos/', opt)
+app.use gitweb('/', opt)
 
 
 server = http.createServer(app)
-server.listen Number(process.env.PORT||80), ->
+server.listen (app.get 'port'), ->
   console.log "battle station fully charged on port #{server.address().port}"
   git = childProcess.spawn 'git', ['daemon', "--base-path=#{projectroot}", '--export-all'],
     stdio: 'inherit'

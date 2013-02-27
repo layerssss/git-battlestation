@@ -10,20 +10,20 @@ block body
           - author = String(commit.author).match(/^\s*(.+)\s*<(.+)>\s*$/);
           td
             if author
-              a.list(href='/repos/#{project}/.git/search?s=#{commit[2]};st=author')
-                img.avatar(src=gravatar.url(String(commit[2]),{s:16}),style='width:16px;height:16px;')
+              a.list(href='/#{project}/.git/search?s=#{encodeURIComponent(String(author[2]))};st=author')
+                img.avatar(src=gravatar.url(String(author[2]),{s:16}),style='width:16px;height:16px;')
                 =author[1]
             else
               =commit.author
           td
-            a(href='/repos/#{project}/.git/commitdiff/#{commit.hash}')=commit.message
+            a(href='/#{project}/.git/commitdiff/#{commit.hash}')=commit.message
           td
-            a(href='/repos/#{project}/.git/commitdiff/#{commit.hash}')=commit.hash.substring(0, 10)
+            a(href='/#{project}/.git/commitdiff/#{commit.hash}')=commit.hash.substring(0, 10)
 
   .row-fluid
     - var comparing = 'undefined'!=typeof(peer)?peer:null
     .span6
-      .well
+      .well(style='background-color: #fff;')
         .btn-toolbar.pull-right
           .btn-group
             .btn.btn-disable settings.hostname
@@ -35,9 +35,9 @@ block body
               for b in repo.branches
                 li(class=branch==b?'active':'')
                   if comparing
-                    a(href='/compare/#{project}/#{b}/#{peer}/#{peerData.branch}/')=b
+                    a(href='/projects/#{project}/#{b}/#{peer}/#{peerData.branch}/')=b
                   else
-                    a(href='/compare/#{project}/#{b}/')=b
+                    a(href='/projects/#{project}/#{b}/')=b
         ul.nav.nav-pills
           li.active
             a(href='#l-unmerged',data-toggle='tab') unmerged
@@ -52,7 +52,7 @@ block body
           #l-all.tab-pane 
             mixin commits(commits)
     .span6
-      .well
+      .well(style='background-color: #fff;')
         .btn-toolbar.pull-right
           .btn-group
             a.btn.dropdown-toggle(data-toggle='dropdown', href='#')
@@ -64,7 +64,7 @@ block body
             ul.dropdown-menu
               for host, alias in peers
                 li(class=alias==comparing?'active':'')
-                  a(href='/compare/#{project}/#{branch}/#{alias}/master/')=alias
+                  a(href='/projects/#{project}/#{branch}/#{alias}/master/')=alias
           .btn-group
             if comparing
               a.btn.dropdown-toggle(data-toggle='dropdown', href='#')
@@ -73,7 +73,7 @@ block body
               ul.dropdown-menu
                 for b in peerData.repo.branches
                   li(class=peerData.branch==b?'active':'')
-                    a(href='/compare/#{project}/#{branch}/#{peer}/#{b}/')=b
+                    a(href='/projects/#{project}/#{branch}/#{peer}/#{b}/')=b
         ul.nav.nav-pills
           li.active
             a(href='#p-unmerged',data-toggle='tab') unmerged

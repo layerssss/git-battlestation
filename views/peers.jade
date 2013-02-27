@@ -8,9 +8,26 @@ block body
     ul.unstyled
       for host, alias in peers
         li 
-          a(href='http://#{host}/') #{alias}: #{host}
+          a(href='http://#{host}:#{settings.port}/') #{alias}: #{host}
           a.btn.btn-mini(href='#{alias}?_method=delete') rm
   form(method='post').form-inline
     input(type='text',name='peer[alias]',placeholder='alias..')
     input(type='text',name='peer[host]',placeholder='host..')
     button.btn-primary.btn(type='submit') add
+  .well
+    a.btn-detect(href='/peers/arp/',onclick="$(this).next().show().html('<div class=\"detecting\">detecting<span></span></a>').load($(this).attr('href'));return false;") detect peers via arp
+    pre.arp.hide
+    :coffeescript
+      func= ->
+        $dots = $ '.detecting>span'
+        if $dots.length
+          len = $dots.text().length
+          len = (len + 1) % 50
+          buf = []
+          while len
+            buf.push '.'
+            len--
+          console.log buf
+          $dots.text buf.join ''
+      setInterval func, 200
+      $('.btn-detect').trigger 'click'
