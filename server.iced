@@ -152,6 +152,3 @@ server.listen (app.get 'port'), ->
   git = childProcess.spawn 'git', ['daemon', "--base-path=#{projectroot}", '--export-all']
   git.on 'exit', (code)->
     throw new Error "git exited with #{code}"
-  process.on 'uncaughtException', ->
-    fs.writeFileSync (path.join projectroot,'.git-battlestation-peers.json'), (JSON.stringify app.locals.peers), 'utf8'
-    git.kill()
