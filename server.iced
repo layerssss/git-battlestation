@@ -141,7 +141,7 @@ app.post '/projects/:project/updateRemotes/', (req, res, next)->
   res.redirect 'back'
 
 opt = 
-  sitename: 'git-battlestation'
+  sitename: app.get 'hostname'
   projectroot: projectroot
   'max_depth': 2
 app.use gitweb('/', opt)
