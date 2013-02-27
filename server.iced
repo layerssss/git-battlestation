@@ -106,6 +106,7 @@ app.get '/projects/:project/:branch/:peer/:peerBranch', (req, res, next)->
   res.locals.peerBranch = req.params.peerBranch
   await request "http://#{res.locals.peerHost}:#{BATTLEPORT}/projects/#{res.locals.project}/#{req.params.peerBranch}/?format=json", defer e, r, data
   return next e if e 
+  return next new Error data if r.statusCode!=200
   res.locals.peerData = JSON.parse data
 
   dic = {}
