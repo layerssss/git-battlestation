@@ -24,7 +24,7 @@ app.locals.gravatar = gravatar
 app.set 'views', path.join __dirname, 'views'
 await childProcess.exec 'hostname', defer e, out, err
 console.error "unable to read hostname: #{e.message}" if e
-app.set 'hostname', out
+app.set 'hostname', out.trim()
 app.set 'port', BATTLEPORT
   
 

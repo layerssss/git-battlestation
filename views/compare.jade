@@ -26,7 +26,9 @@ block body
       .well(style='background-color: #fff;')
         .btn-toolbar.pull-right
           .btn-group
-            .btn.btn-disable settings.hostname
+            .btn.btn-disable
+              |local: 
+              =settings.hostname
           .btn-group
             a.btn.dropdown-toggle(data-toggle='dropdown', href='#')
               =branch
@@ -57,6 +59,7 @@ block body
           .btn-group
             a.btn.dropdown-toggle(data-toggle='dropdown', href='#')
               if comparing
+                |remote: 
                 =peer
               else
                 | [select a peer]
