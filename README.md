@@ -19,15 +19,20 @@ git-battlestation
 ### √包含gitweb中的基本功能
 
 同事们可以在web界面中查看你的代码仓库的各种信息。
+![demo-gitweb](demo-gitweb.png)
 
 ### √启动git-daemon
 
 为同事们提供你当前目录下所有代码仓库的只读访问（通过git协议）。
+![demo-git-daemon](demo-git-daemon.png)
 
 ### √查看并比较本地和某一个peer上的分支进展
 
 列出所有其他分支上有的而主分支没有的提交，链接到gitweb上对应的commitdiff，方便地进行代码审核。
 
+![demo-compare](demo-compare.png)
+
 ### √全局管理peers，并且一键更新到代码仓库的remote
 
 将peers的信息同步到git仓库的remote中，可以方便之后在命令行进行代码合并。
+![demo-update-remotes](demo-update-remotes.png)
