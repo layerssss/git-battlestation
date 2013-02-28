@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Git-battlestation by layerssss</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Git-battlestation</h1>
+        <p>轻便的git伴侣</p>
+
+        <p class="view"><a href="https://github.com/layerssss/git-battlestation">View the Project on GitHub <small>layerssss/git-battlestation</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/layerssss/git-battlestation/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/layerssss/git-battlestation/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/layerssss/git-battlestation">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>git-battlestation</h1>
+
+<p>轻便的git伴侣</p>
+
+<h2>安装方法：</h2>
+
+<ol>
+<li>安装<a href="http://nodejs.org/">node.js</a>
+</li>
+<li>通过npm安装git-battlestation：<code>sudo npm install git-battlestation -g</code>
+</li>
+<li>关闭占用<code>tcp 19837</code> 端口的服务器等</li>
+<li>关闭本地的<code>git-daemon</code>服务（如果有的话）</li>
+</ol><h2>启动方法：</h2>
+
+<ul>
+<li>临时启动（按<code>Ctrl + C</code>退出）：在存放代码仓库的目录的父目录下（如<code>$ ~/Repositories/</code>）执行<code>git battlestation</code>，然后在浏览器中访问<code>http://localhost:19837/</code>便可查看自己的battlestation。</li>
+</ul><h2>功能：</h2>
+
+<h3>√包含gitweb中的基本功能</h3>
+
+<p>同事们可以在web界面中查看你的代码仓库的各种信息。
+<img src="demo-gitweb.png" alt="demo-gitweb"></p>
+
+<h3>√启动git-daemon</h3>
+
+<p>为同事们提供你当前目录下所有代码仓库的只读访问（通过git协议）。
+<img src="demo-git-daemon.png" alt="demo-git-daemon"></p>
+
+<h3>√查看并比较本地和某一个peer上的分支进展</h3>
+
+<p>列出所有其他分支上有的而主分支没有的提交，链接到gitweb上对应的commitdiff，方便地进行代码审核。</p>
+
+<p><img src="demo-compare.png" alt="demo-compare"></p>
+
+<h3>√全局管理peers，并且一键更新到代码仓库的remote</h3>
+
+<p>将peers的信息同步到git仓库的remote中，可以方便之后在命令行进行代码合并。
+<img src="demo-update-remotes.png" alt="demo-update-remotes"></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/layerssss">layerssss</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
