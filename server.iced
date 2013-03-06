@@ -72,9 +72,11 @@ app.post '/peers/', (req, res, next)->
   await request "http://#{req.body.peer.host}:#{BATTLEPORT}/who", defer err, r, data
   return next new Error "git-battlestation not detected at #{req.body.peer.host}" if err || data!='git-battlestation'
   app.locals.peers[req.body.peer.alias] = req.body.peer.host
+  await fs.writeFile '.git-battlestation-peers.json', 'utf8', JSON.stringify app.locals.peers, defer e
+  return next e if e
   res.redirect 'back'
 
-app.delete '/peers/:peer', (req, res)->
+app.delete '/peers/:peer', (req, res, next)->
   ip = req.header('x-forwarded-for') || req.connection.remoteAddress
   ip = ip.split(',')[0].trim()
   return next new Error 'you must operate from 127.0.0.1' if ip!='127.0.0.1'
