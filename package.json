@@ -1,12 +1,13 @@
 {
   "name": "git-battlestation",
-  "version": "0.0.8",
+  "version": "0.0.11",
   "description": "ERROR: No README.md file found!",
   "main": "index.js",
   "dependencies": {
     "express": "~3.1.0",
     "gitweb": "~0.1.4",
     "iced-coffee-script": "~1.4.0c",
+    "coffee-script": "~1.4.0c",
     "jade": "~0.28.1",
     "request": "~2.14.0",
     "header-stack": "~0.1.3",
